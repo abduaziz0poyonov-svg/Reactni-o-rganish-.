@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚛️ REACT MASTER - 0 dan PRO gacha</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fira Code', 'Courier New', monospace;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0a0e27 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(10, 14, 39, 0.95);
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(97, 218, 251, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #61dafb 0%, #4da8da 50%, #003d82 100%);
+            padding: 40px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '⚛️';
+            position: absolute;
+            right: 30px;
+            top: 20px;
+            font-size: 120px;
+            opacity: 0.15;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.15; }
+            50% { transform: scale(1.1) rotate(10deg); opacity: 0.25; }
+        }
+
+        .header h1 {
+            font-size: 3.8em;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.4em;
+            opacity: 0.95;
+            max-width: 700px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 25px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.15);
+            padding: 18px 28px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .nav-bar {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(97, 218, 251, 0.2);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            border: 1px solid rgba(97, 218, 251, 0.3);
+            border-radius: 30px;
+            background: rgba(97, 218, 251, 0.05);
+            color: #61dafb;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-size: 1em;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(97, 218, 251, 0.2);
+            border-color: #61dafb;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(97, 218, 251, 0.4);
+        }
+
+        .nav-btn.active {
+            background: rgba(97, 218, 251, 0.2);
+            color: #fff;
+            border-color: #61dafb;
+            box-shadow: 0 10px 25px rgba(97, 218, 251, 0.3);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 25px;
+            padding: 40px;
+        }
+
+        .lessons-panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 25px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(97, 218, 251, 0.2);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        .lessons-title {
+            font-size: 1.5em;
+            color: #61dafb;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(97, 218, 251, 0.3);
+            font-weight: bold;
+        }
+
+        .level-title {
+            font-size: 1.2em;
+            color: #61dafb;
+            font-weight: bold;
+            margin: 20px 0 15px 0;
+            padding: 10px 15px;
+            background: rgba(97, 218, 251, 0.1);
+            border-radius: 15px;
+            border-left: 4px solid #61dafb;
+        }
+
+        .lesson-item {
+            padding: 15px 20px;
+            margin: 8px 0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid transparent;
+            backdrop-filter: blur(10px);
+        }
+
+        .lesson-item:hover {
+            background: rgba(97, 218, 251, 0.1);
+            border-color: rgba(97, 218, 251, 0.5);
+            transform: translateX(10px);
+        }
+
+        .lesson-item.active {
+            background: rgba(97, 218, 251, 0.2);
+            border-color: #61dafb;
+            box-shadow: 0 10px 25px rgba(97, 218, 251, 0.2);
+        }
+
+        .lesson-icon {
+            font-size: 1.4em;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(97, 218, 251, 0.2);
+        }
+
+        .lesson-info {
+            flex: 1;
+        }
+
+        .lesson-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #61dafb;
+        }
+
+        .lesson-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+            color: #ccc;
+        }
+
+        .lesson-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .main-panel {
+            background: rgba(255,255,255,0.03);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid rgba(97, 218, 251, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .tab-header {
+            display: flex;
+            background: rgba(97, 218, 251, 0.05);
+            border-bottom: 1px solid rgba(97, 218, 251, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px 25px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #888;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            color: #61dafb;
+            background: rgba(97, 218, 251, 0.1);
+        }
+
+        .tab-btn.active {
+            color: #61dafb;
+            border-bottom-color: #61dafb;
+            background: rgba(97, 218, 251, 0.15);
+        }
+
+        .tab-content {
+            padding: 30px;
+            min-height: 550px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .code-editor {
+            background: #0d1117;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            border: 2px solid #61dafb;
+            box-shadow: 0 10px 30px rgba(97, 218, 251, 0.3);
+        }
+
+        .code-header {
+            background: #161b22;
+            padding: 15px 25px;
+            color: #61dafb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #61dafb;
+            font-weight: bold;
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .code-btn {
+            padding: 8px 20px;
+            border: 1px solid #61dafb;
+            border-radius: 8px;
+            background: rgba(97, 218, 251, 0.1);
+            color: #61dafb;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .code-btn:hover {
+            background: rgba(97, 218, 251, 0.3);
+            box-shadow: 0 0 10px rgba(97, 218, 251, 0.5);
+            transform: translateY(-1px);
+        }
+
+        textarea {
+            width: 100%;
+            height: 350px;
+            background: #0d1117;
+            border: none;
+            color: #61dafb;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 25px;
+            resize: none;
+            outline: none;
+        }
+
+        .output-area {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 25px;
+            min-height: 300px;
+            border: 2px solid #61dafb;
+            position: relative;
+            backdrop-filter: blur(10px);
+            margin-top: 25px;
+        }
+
+        .output-title {
+            position: absolute;
+            top: -15px;
+            left: 25px;
+            background: rgba(10, 14, 39, 0.95);
+            padding: 8px 20px;
+            color: #61dafb;
+            font-weight: bold;
+            border-radius: 25px;
+            border: 1px solid rgba(97, 218, 251, 0.3);
+        }
+
+        .result-box {
+            color: #61dafb;
+            padding: 20px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .demo-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(97, 218, 251, 0.2);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #61dafb;
+            font-weight: bold;
+        }
+
+        .explanation-box {
+            background: rgba(97, 218, 251, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            border-left: 5px solid #61dafb;
+            backdrop-filter: blur(10px);
+        }
+
+        .explanation-title {
+            font-size: 1.4em;
+            color: #61dafb;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .explanation-text {
+            color: #ddd;
+            line-height: 1.8;
+        }
+
+        .react-keyword {
+            color: #61dafb;
+            font-weight: bold;
+        }
+
+        .react-function {
+            color: #79c0ff;
+            font-weight: bold;
+        }
+
+        .react-string {
+            color: #a5d6ff;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(97, 218, 251, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 1px solid rgba(97, 218, 251, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #61dafb, #4da8da, #003d82);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(97, 218, 251, 0.5);
+        }
+
+        .quiz-container {
+            background: rgba(97, 218, 251, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid rgba(97, 218, 251, 0.2);
+        }
+
+        .quiz-question {
+            font-size: 1.3em;
+            color: #61dafb;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(97, 218, 251, 0.1);
+            border-radius: 12px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 18px 22px;
+            border: 2px solid rgba(97, 218, 251, 0.3);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+            color: #61dafb;
+        }
+
+        .quiz-option:hover {
+            border-color: #61dafb;
+            background: rgba(97, 218, 251, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .quiz-option.correct {
+            background: rgba(76, 255, 0, 0.3);
+            border-color: #4cff00;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff0000;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #61dafb, #4da8da);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(97, 218, 251, 0.4);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .certificate-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10001;
+            backdrop-filter: blur(10px);
+        }
+
+        .certificate-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #61dafb, #4da8da);
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            color: white;
+            max-width: 500px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+
+        @media (max-width: 1100px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.8em;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(97, 218, 251, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #61dafb, #4da8da);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚛️ REACT MASTER</h1>
+            <p><strong>0 dan PRO darajagacha React.js ni o'rganing</strong><br>
+            50+ dars, interaktiv demo, real misollar va sertifikat</p>
+            <div class="header-stats">
+                <div class="stat">📚 20+ Boshlang'ich</div>
+                <div class="stat">⚡ 15+ O'rta</div>
+                <div class="stat">🚀 15+ Yuqori</div>
+                <div class="stat">📝 50+ Test</div>
+                <div class="stat">🎨 Live Preview</div>
+                <div class="stat">🏆 1 Sertifikat</div>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <button class="nav-btn active" onclick="changeLevel('basic', this)">📚 Boshlang'ich</button>
+            <button class="nav-btn" onclick="changeLevel('intermediate', this)">⚡ O'rta</button>
+            <button class="nav-btn" onclick="changeLevel('advanced', this)">🚀 Yuqori</button>
+            
+            <div style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
+                <span class="lesson-badge" id="progressDisplay">0/50</span>
+                <button class="nav-btn" onclick="getCertificate()" style="padding: 8px 20px; font-size: 0.9em;">🏆 Sertifikat</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="lessons-panel">
+                <div class="lessons-title">⚛️ React Darslari</div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div id="lessons-container"></div>
+            </div>
+
+            <div class="main-panel">
+                <div class="tab-header">
+                    <button class="tab-btn active" onclick="changeTab('code', this)">💻 JSX Kod</button>
+                    <button class="tab-btn" onclick="changeTab('demo', this)">🎨 Preview</button>
+                    <button class="tab-btn" onclick="changeTab('explain', this)">📖 Tushuntirish</button>
+                    <button class="tab-btn" onclick="changeTab('quiz', this)">🧠 Test</button>
+                </div>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="code-tab">
+                        <div class="code-editor">
+                            <div class="code-header">
+                                <span id="codeLanguage">⚛️ React JSX | Boshlang'ich</span>
+                                <div class="code-actions">
+                                    <button class="code-btn" onclick="runCode()">▶️ Preview</button>
+                                    <button class="code-btn" onclick="resetCode()">🔄 Qayta o'rnat</button>
+                                    <button class="code-btn" onclick="copyCode()">📋 Nusxa olish</button>
+                                    <button class="code-btn" onclick="downloadCode()">💾 Yuklab olish</button>
+                                </div>
+                            </div>
+                            <textarea id="codeArea" spellcheck="false"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="demo-tab">
+                        <div class="output-area">
+                            <div class="output-title">🎨 Live Preview</div>
+                            <div class="demo-preview" id="demoPreview"></div>
+                        </div>
+
+                        <div class="explanation-box">
+                            <div class="explanation-title">📊 Component Output</div>
+                            <div class="result-box" id="demoOutput"></div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="explain-tab">
+                        <div class="explanation-box">
+                            <div class="explanation-title" id="lessonTitle">1-dars: React nima?</div>
+                            <div class="explanation-text" id="lessonExplanation"></div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="quiz-tab">
+                        <div class="quiz-container">
+                            <div class="quiz-question" id="quizQuestion"></div>
+                            <div class="quiz-options" id="quizOptions"></div>
+                            <div style="margin-top: 25px; padding: 15px; border-radius: 10px; background: rgba(76, 255, 0, 0.1); color: #4cff00; font-weight: bold; display: none;" id="quizResult"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="certificate-modal" id="certificateModal">
+        <div class="certificate-content">
+            <h2>🎉 REACT MASTER SERTIFIKATI</h2>
+            <p><strong>Tabriklaymiz!</strong></p>
+            <p>Siz barcha 50 ta darsni muvaffaqiyatli tugatdingiz!</p>
+            <p style="font-size: 1.2em; margin: 20px 0;">👨‍💻 React Professional sertifikatingiz tayyor!</p>
+            <button onclick="closeCertificate()" style="padding: 15px 30px; font-size: 1.1em; background: #000; color: #61dafb; border: 2px solid #61dafb; border-radius: 25px; cursor: pointer; font-weight: bold;">✅ Sertifikatni yuklab olish</button>
+        </div>
+    </div>
+
+    <script>
+        let currentLevel = 'basic';
+        let currentLesson = 1;
+        let progress = JSON.parse(localStorage.getItem('reactProgress')) || new Array(50).fill(false);
+
+        const lessonsData = {
+            basic: [
+                {id:1, name:"React nima?", desc:"React Framework", level:"Boshlang'ich", badge:"Oson"},
+                {id:2, name:"JSX asoslari", desc:"JSX sintaksisi", level:"Boshlang'ich", badge:"Oson"},
+                {id:3, name:"Components", desc:"Kompotent yaratish", level:"Boshlang'ich", badge:"O'rta"},
+                {id:4, name:"Props", desc:"Ma'lumotlarni o'tkazish", level:"Boshlang'ich", badge:"O'rta"},
+                {id:5, name:"State va Hooks", desc:"useState hook", level:"Boshlang'ich", badge:"O'rta"},
+                {id:6, name:"Event Handling", desc:"Event listener", level:"Boshlang'ich", badge:"O'rta"},
+                {id:7, name:"Conditional Rendering", desc:"Shartli render", level:"Boshlang'ich", badge:"O'rta"},
+                {id:8, name:"List Rendering", desc:"map() bilan list", level:"Boshlang'ich", badge:"O'rta"},
+                {id:9, name:"Forms", desc:"Input formalar", level:"Boshlang'ich", badge:"O'rta"},
+                {id:10, name:"CSS Styling", desc:"CSS bilan uslub", level:"Boshlang'ich", badge:"O'rta"},
+                {id:11, name:"useEffect Hook", desc:"Side effects", level:"Boshlang'ich", badge:"O'rta"},
+                {id:12, name:"Component Lifecycle", desc:"Lifecycle methods", level:"Boshlang'ich", badge:"O'rta"},
+                {id:13, name:"Props Drilling", desc:"Props o'tkazish", level:"Boshlang'ich", badge:"O'rta"},
+                {id:14, name:"Key prop", desc:"List key zaruriyati", level:"Boshlang'ich", badge:"O'rta"},
+                {id:15, name:"Fragments", desc:"React.Fragment", level:"Boshlang'ich", badge:"Oson"},
+                {id:16, name:"Children prop", desc:"children o'zgaruvchisi", level:"Boshlang'ich", badge:"O'rta"},
+                {id:17, name:"Boolean props", desc:"True/false props", level:"Boshlang'ich", badge:"Oson"},
+                {id:18, name:"Default props", desc:"Default qiymatlar", level:"Boshlang'ich", badge:"O'rta"},
+                {id:19, name:"PropTypes", desc:"Type checking", level:"Boshlang'ich", badge:"O'rta"},
+                {id:20, name:"Spread operator", desc:"...props sintaksisi", level:"Boshlang'ich", badge:"O'rta"}
+            ],
+            intermediate: [
+                {id:21, name:"Context API", desc:"Global state", level:"O'rta", badge:"Qiyin"},
+                {id:22, name:"useContext hook", desc:"Context foydalanish", level:"O'rta", badge:"Qiyin"},
+                {id:23, name:"useReducer Hook", desc:"Complex state", level:"O'rta", badge:"Qiyin"},
+                {id:24, name:"Custom Hooks", desc:"Shaxsiy hooks", level:"O'rta", badge:"Qiyin"},
+                {id:25, name:"Higher Order Components", desc:"HOC patterns", level:"O'rta", badge:"Qiyin"},
+                {id:26, name:"Render Props", desc:"Render props pattern", level:"O'rta", badge:"Qiyin"},
+                {id:27, name:"useCallback Hook", desc:"Function memorization", level:"O'rta", badge:"Qiyin"},
+                {id:28, name:"useMemo Hook", desc:"Value memorization", level:"O'rta", badge:"Qiyin"},
+                {id:29, name:"useRef Hook", desc:"Direct DOM access", level:"O'rta", badge:"Qiyin"},
+                {id:30, name:"API Calls", desc:"Fetch with useEffect", level:"O'rta", badge:"O'rta"},
+                {id:31, name:"Error Handling", desc:"Error boundary", level:"O'rta", badge:"Qiyin"},
+                {id:32, name:"Loading State", desc:"Loading screens", level:"O'rta", badge:"O'rta"},
+                {id:33, name:"Async/Await", desc:"Async data fetching", level:"O'rta", badge:"O'rta"},
+                {id:34, name:"Conditional Routes", desc:"Route conditions", level:"O'rta", badge:"O'rta"},
+                {id:35, name:"Lazy Loading", desc:"React.lazy va Suspense", level:"O'rta", badge:"Qiyin"}
+            ],
+            advanced: [
+                {id:36, name:"Redux asoslari", desc:"State management", level:"Yuqori", badge:"Murakkab"},
+                {id:37, name:"Redux Actions", desc:"Action creators", level:"Yuqori", badge:"Murakkab"},
+                {id:38, name:"Redux Reducers", desc:"Reducer functions", level:"Yuqori", badge:"Murakkab"},
+                {id:39, name:"Redux Store", desc:"Store configuration", level:"Yuqori", badge:"Murakkab"},
+                {id:40, name:"React-Redux", desc:"Redux bilan React", level:"Yuqori", badge:"Murakkab"},
+                {id:41, name:"Middleware", desc:"Redux middleware", level:"Yuqori", badge:"Murakkab"},
+                {id:42, name:"Reselect library", desc:"Selectors", level:"Yuqori", badge:"Murakkab"},
+                {id:43, name:"TypeScript bilan React", desc:"Type safety", level:"Yuqori", badge:"Murakkab"},
+                {id:44, name:"Performance Optimization", desc:"React.memo va Code splitting", level:"Yuqori", badge:"Murakkab"},
+                {id:45, name:"Testing", desc:"Jest va React Testing Library", level:"Yuqori", badge:"Murakkab"},
+                {id:46, name:"Portals", desc:"React Portals", level:"Yuqori", badge:"Murakkab"},
+                {id:47, name:"Concurrent Mode", desc:"Experimental features", level:"Yuqori", badge:"Murakkab"},
+                {id:48, name:"Fiber Architecture", desc:"React internals", level:"Yuqori", badge:"Murakkab"},
+                {id:49, name:"Deployment", desc:"Production deploy", level:"Yuqori", badge:"Murakkab"},
+                {id:50, name:"Advanced Patterns", desc:"Best practices", level:"Yuqori", badge:"Murakkab"}
+            ]
+        };
+
+        const codeDatabase = {
+            1: `// 1-dars: React nima?
+// React - UI library Facebook'dan
+// Kompotent-asosli architecture
+// Deklarativ approach
+
+import React from 'react';
+
+function App() {
+  return (
+    <div>
+      <h1>⚛️ React'ga xush kelibsiz!</h1>
+      <p>Bu React'ning birinchi komponenti</p>
+    </div>
+  );
+}
+
+export default App;`,
+
+            2: `// 2-dars: JSX asoslari
+// JSX - JavaScript XML
+// HTML-ga o'xshash syntaksisi
+
+import React from 'react';
+
+function Greeting() {
+  const name = "Ali";
+  const age = 25;
+  
+  return (
+    <div>
+      <h2>Salom, {name}!</h2>
+      <p>Sizning yoshingiz: {age}</p>
+      <p>Kelgan yil yoshingiz: {age + 1}</p>
+    </div>
+  );
+}
+
+export default Greeting;`,
+
+            3: `// 3-dars: Components
+// Functional components
+// Qayta ishlatish mumkin
+
+import React from 'react';
+
+function Card({ title, description }) {
+  return (
+    <div style={{border: '1px solid #ccc', padding: '10px'}}>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <Card title="React" description="UI Library" />
+      <Card title="JSX" description="JavaScript XML" />
+      <Card title="Components" description="Qayta ishlatish" />
+    </div>
+  );
+}
+
+export default App;`,
+
+            4: `// 4-dars: Props
+// Komponentga ma'lumot o'tkazish
+// Parent -> Child
+
+import React from 'react';
+
+function Welcome(props) {
+  return <h1>Salom, {props.name}!</h1>;
+}
+
+function App() {
+  return (
+    <div>
+      <Welcome name="Ali" />
+      <Welcome name="Vali" />
+      <Welcome name="Dilshod" />
+    </div>
+  );
+}
+
+export default App;`,
+
+            5: `// 5-dars: State va Hooks
+// useState - state o'zgaruvchisi
+// Reaktiv ma'lumotlar
+
+import React, { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <div>
+      <p>Hozirgi soni: {count}</p>
+      <button onClick={() => setCount(count + 1)}>
+        Oshir
+      </button>
+      <button onClick={() => setCount(count - 1)}>
+        Kamayt
+      </button>
+    </div>
+  );
+}
+
+export default Counter;`,
+
+            6: `// 6-dars: Event Handling
+// onClick, onChange va boshqa eventlar
+
+import React, { useState } from 'react';
+
+function EventDemo() {
+  const [message, setMessage] = useState('');
+  
+  const handleClick = () => {
+    alert('Tugma bosildi!');
+  };
+  
+  return (
+    <div>
+      <button onClick={handleClick}>
+        Menga bosing
+      </button>
+      
+      <input 
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Matn yozing"
+      />
+      <p>Yozilgan: {message}</p>
+    </div>
+  );
+}
+
+export default EventDemo;`,
+
+            7: `// 7-dars: Conditional Rendering
+// if/else, ternary, logical &&
+
+import React, { useState } from 'react';
+
+function LoginPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  return (
+    <div>
+      {isLoggedIn ? (
+        <h1>Xush kelibsiz, foydalanuvchi!</h1>
+      ) : (
+        <h1>Iltimos, tizimga kiring</h1>
+      )}
+      
+      <button onClick={() => setIsLoggedIn(!isLoggedIn)}>
+        {isLoggedIn ? 'Chiqish' : 'Kirish'}
+      </button>
+    </div>
+  );
+}
+
+export default LoginPage;`,
+
+            8: `// 8-dars: List Rendering
+// map() bilan ro'yxat chiqarish
+
+import React from 'react';
+
+function TodoList() {
+  const todos = [
+    { id: 1, text: 'React o\'rganish' },
+    { id: 2, text: 'Proyekt yaratish' },
+    { id: 3, text: 'Deploy qilish' }
+  ];
+  
+  return (
+    <div>
+      <h2>Todo List</h2>
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id}>{todo.text}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default TodoList;`,
+
+            9: `// 9-dars: Forms
+// Forma qurilish va submission
+
+import React, { useState } from 'react';
+
+function UserForm() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(\`Salom \${name}!\`);
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Ismingiz"
+      />
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <button type="submit">Yuborish</button>
+    </form>
+  );
+}
+
+export default UserForm;`,
+
+            11: `// 11-dars: useEffect Hook
+// Side effects - API calls, subscriptions
+
+import React, { useState, useEffect } from 'react';
+
+function DataFetcher() {
+  const [data, setData] = useState(null);
+  
+  useEffect(() => {
+    console.log('Component mount qilindi');
+    
+    // Cleanup function
+    return () => {
+      console.log('Component unmount');
+    };
+  }, []); // Empty dependency array
+  
+  return <div>Data: {data}</div>;
+}
+
+export default DataFetcher;`,
+
+            21: `// 21-dars: Context API
+// Global state management
+
+import React, { createContext, useState } from 'react';
+
+const ThemeContext = createContext();
+
+function App() {
+  const [theme, setTheme] = useState('light');
+  
+  return (
+    <ThemeContext.Provider value={{theme, setTheme}}>
+      <MainComponent />
+    </ThemeContext.Provider>
+  );
+}
+
+function MainComponent() {
+  const { theme, setTheme } = React.useContext(ThemeContext);
+  
+  return (
+    <div style={{
+      background: theme === 'light' ? '#fff' : '#333',
+      color: theme === 'light' ? '#000' : '#fff'
+    }}>
+      <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        Toggle Theme
+      </button>
+    </div>
+  );
+}
+
+export default App;`,
+
+            30: `// 30-dars: API Calls
+// Fetch data with useEffect
+
+import React, { useState, useEffect } from 'react';
+
+function UserList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(res => res.json())
+      .then(data => {
+        setUsers(data);
+        setLoading(false);
+      });
+  }, []);
+  
+  if (loading) return <p>Yuklanmoqda...</p>;
+  
+  return (
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default UserList;`,
+
+            43: `// 43-dars: TypeScript bilan React
+// Type safety
+
+import React, { useState } from 'react';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface UserProps {
+  user: User;
+  onDelete: (id: number) => void;
+}
+
+function UserComponent({ user, onDelete }: UserProps) {
+  return (
+    <div>
+      <h3>{user.name}</h3>
+      <p>{user.email}</p>
+      <button onClick={() => onDelete(user.id)}>
+        O'chirish
+      </button>
+    </div>
+  );
+}
+
+export default UserComponent;`,
+
+            50: `// 50-dars: Advanced Patterns
+// Best practices va murakkab patterns
+
+import React, { useState, useCallback, useMemo } from 'react';
+
+function AdvancedComponent() {
+  const [count, setCount] = useState(0);
+  const [items, setItems] = useState([]);
+  
+  // useCallback - funksiyani memorize
+  const handleClick = useCallback(() => {
+    setCount(c => c + 1);
+  }, []);
+  
+  // useMemo - hisoblashni memorize
+  const expensiveValue = useMemo(() => {
+    return items.reduce((a, b) => a + b, 0);
+  }, [items]);
+  
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <p>Sum: {expensiveValue}</p>
+      <button onClick={handleClick}>Oshir</button>
+    </div>
+  );
+}
+
+export default AdvancedComponent;`
+        };
+
+        const demoDatabase = {
+            1: `<h1>⚛️ React'ga xush kelibsiz!</h1>
+<p>Bu React'ning birinchi komponenti</p>`,
+
+            2: `<h2>Salom, Ali!</h2>
+<p>Sizning yoshingiz: 25</p>
+<p>Kelgan yil yoshingiz: 26</p>`,
+
+            3: `<div style="border: 1px solid #ccc; padding: 10px;">
+  <h3>React</h3>
+  <p>UI Library</p>
+</div>
+<div style="border: 1px solid #ccc; padding: 10px;">
+  <h3>JSX</h3>
+  <p>JavaScript XML</p>
+</div>
+<div style="border: 1px solid #ccc; padding: 10px;">
+  <h3>Components</h3>
+  <p>Qayta ishlatish</p>
+</div>`,
+
+            4: `<h1>Salom, Ali!</h1>
+<h1>Salom, Vali!</h1>
+<h1>Salom, Dilshod!</h1>`,
+
+            5: `<p>Hozirgi soni: 0</p>
+<button>Oshir</button>
+<button>Kamayt</button>
+<!-- Tugmalarni bosganda soni o'zgaradi -->`,
+
+            8: `<h2>Todo List</h2>
+<ul>
+  <li>React o'rganish</li>
+  <li>Proyekt yaratish</li>
+  <li>Deploy qilish</li>
+</ul>`,
+
+            30: `<ul>
+  <li>Leanne Graham</li>
+  <li>Ervin Howell</li>
+  <li>Clementine Bauch</li>
+  <li>Patricia Lebsack</li>
+  <li>Chelsey Dietrich</li>
+  ... (10 users jami)
+</ul>`
+        };
+
+        const explanationDatabase = {
+            1: `React - UI Library:
+
+📌 <span class="react-keyword">Facebook</span> tomonidan yaratilgan
+📌 <span class="react-keyword">Komponent</span> asosida
+📌 <span class="react-keyword">Declarative</span> approach
+📌 <span class="react-keyword">Virtual DOM</span> foydalanadi
+📌 <span class="react-keyword">Reusable</span> komponentlar
+
+React - modern web'ni qurilish uchun!`,
+
+            2: `JSX - JavaScript XML:
+
+<span class="react-keyword">JSX</span> - HTML + JavaScript
+<span class="react-keyword">Expressions</span> - {} ichida
+<span class="react-keyword">className</span> - CSS class
+<span class="react-keyword">Self-closing</span> - <Component />
+<span class="react-keyword">Fragments</span> - <>...</>
+
+JSX ko'p o'qilishi oson!`,
+
+            3: `Components - Komponentlar:
+
+<span class="react-function">Functional</span> - JavaScript functions
+<span class="react-function">Class</span> - ES6 classes
+<span class="react-function">Composition</span> - Components in components
+<span class="react-function">Reusable</span> - Qayta ishlatish mumkin
+<span class="react-function">Props</span> - Ma'lumotlarni o'tkazish
+
+Kompotentlar React asosi!`,
+
+            4: `Props - Properties:
+
+<span class="react-keyword">Props</span> - Kompotentga ma'lumot
+<span class="react-keyword">Read-only</span> - O'zgartirilmaydi
+<span class="react-keyword">Function arguments</span> - Funksiya parametri
+<span class="react-keyword">Destructuring</span> - { name, age }
+<span class="react-keyword">Default props</span> - Standart qiymatlar
+
+Props bilan ma'lumot o'tkaziladi!`,
+
+            5: `State va Hooks:
+
+<span class="react-keyword">useState</span> - State hook
+<span class="react-keyword">const [state, setState]</span> - Syntax
+<span class="react-keyword">Immutable</span> - To'g'ridan to'g'ri o'zgartirilmaydi
+<span class="react-keyword">Re-render</span> - State o'zgarganda qayta render
+<span class="react-keyword">Multiple states</span> - Ko'pchilik state
+
+State - kompotentning xotirasi!`,
+
+            6: `Event Handling:
+
+<span class="react-function">onClick</span> - Tugma bosilish
+<span class="react-function">onChange</span> - Input o'zgarish
+<span class="react-function">onSubmit</span> - Forma yuborish
+<span class="react-function">e.preventDefault()</span> - Default xatti-harakatni to'xtatish
+<span class="react-function">Arrow functions</span> - () => {}
+
+Events - user o'zaro aloqalari!`,
+
+            11: `useEffect Hook:
+
+<span class="react-keyword">useEffect</span> - Side effects
+<span class="react-keyword">Dependency array</span> - [] - mount/unmount
+<span class="react-keyword">Cleanup function</span> - Return function
+<span class="react-keyword">API calls</span> - Data fetching
+<span class="react-keyword">Subscriptions</span> - Event listeners
+
+useEffect - lifecycle hook!`,
+
+            21: `Context API:
+
+<span class="react-keyword">createContext</span> - Context yaratish
+<span class="react-keyword">Provider</span> - Context ma'lumoti
+<span class="react-keyword">useContext</span> - Context foydalanish
+<span class="react-keyword">Global state</span> - Barcha komponentda
+<span class="react-keyword">Props drilling</span> - Masala yo'q
+
+Context - global state management!`,
+
+            30: `API Calls:
+
+<span class="react-keyword">fetch()</span> - HTTP request
+<span class="react-keyword">async/await</span> - Asinxron operatsiyalar
+<span class="react-keyword">useEffect</span> - Data fetching hook
+<span class="react-keyword">Loading state</span> - Yuklanish holatı
+<span class="react-keyword">Error handling</span> - Xatolarni boshqarish
+
+API - server bilan aloqa!`,
+
+            50: `Advanced Patterns:
+
+✅ useCallback - Function memorization
+✅ useMemo - Value memorization
+✅ useRef - Direct DOM access
+✅ Custom Hooks - Shaxsiy hooks
+✅ Higher Order Components - HOC
+
+Professional React kodi!`
+        };
+
+        const quizDatabase = {
+            1: {
+                question: "React nima?",
+                options: ["Backend framework", "UI Library", "Database", "Server"],
+                correct: 1
+            },
+            2: {
+                question: "JSX nima?",
+                options: ["JavaScript Object", "JavaScript XML", "Java Syntax", "JSON Extension"],
+                correct: 1
+            },
+            3: {
+                question: "Props nimani o'tkazadi?",
+                options: ["State", "Functions", "Data from parent", "CSS"],
+                correct: 2
+            },
+            5: {
+                question: "useState nima uchun?",
+                options: ["Styling", "State management", "Fetching", "Routing"],
+                correct: 1
+            },
+            11: {
+                question: "useEffect qachon bajariladi?",
+                options: ["Onclick", "Mount/Unmount", "Typing", "Scrolling"],
+                correct: 1
+            },
+            21: {
+                question: "Context API nimani amalga oshiradi?",
+                options: ["API calls", "Global state", "Styling", "Routing"],
+                correct: 1
+            },
+            30: {
+                question: "API call qaysi hook'da?",
+                options: ["useState", "useCallback", "useEffect", "useRef"],
+                correct: 2
+            },
+            43: {
+                question: "TypeScript React'da nima beradi?",
+                options: ["Styling", "Type safety", "Routing", "Animation"],
+                correct: 1
+            }
+        };
+
+        function init() {
+            displayLessons();
+            loadLesson(1);
+            updateProgress();
+        }
+
+        function changeLevel(level, button) {
+            currentLevel = level;
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            const lessons = lessonsData[level];
+            if (lessons && lessons.length > 0) {
+                currentLesson = lessons[0].id;
+                displayLessons();
+                loadLesson(currentLesson);
+            }
+        }
+
+        function displayLessons() {
+            const container = document.getElementById('lessons-container');
+            const lessons = lessonsData[currentLevel];
+            
+            let html = '';
+            lessons.forEach(lesson => {
+                const completed = progress[lesson.id - 1];
+                const icon = completed ? '✅' : '⚛️';
+                html += `
+                    <div class="lesson-item ${lesson.id === currentLesson ? 'active' : ''}" onclick="loadLesson(${lesson.id})">
+                        <div class="lesson-icon">${icon}</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">${lesson.id}. ${lesson.name}</div>
+                            <div class="lesson-desc">${lesson.desc}</div>
+                        </div>
+                        <span class="lesson-badge">${lesson.badge}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function loadLesson(id) {
+            currentLesson = id;
+            
+            let lesson = null;
+            for(const level in lessonsData) {
+                const found = lessonsData[level].find(l => l.id === id);
+                if(found) {
+                    lesson = found;
+                    break;
+                }
+            }
+            
+            if (lesson) {
+                document.querySelectorAll('.lesson-item').forEach(item => {
+                    item.classList.remove('active');
+                    if(item.querySelector('.lesson-name')?.textContent.includes(lesson.name)) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                const code = codeDatabase[id] || `// Dars ${id}\nfunction App() {\n  return <h1>Dars ${id}</h1>;\n}`;
+                document.getElementById('codeArea').value = code;
+                document.getElementById('codeLanguage').textContent = `⚛️ React JSX | ${lesson.level}`;
+                
+                const demo = demoDatabase[id] || `Demo...`;
+                document.getElementById('demoPreview').innerHTML = demo;
+                document.getElementById('demoOutput').textContent = demo;
+                
+                document.getElementById('lessonTitle').textContent = `${lesson.id}-dars: ${lesson.name}`;
+                document.getElementById('lessonExplanation').innerHTML = explanationDatabase[id] || `Bu darsda ${lesson.desc} mavzusi o'rganiladi.`;
+                
+                loadQuiz(id);
+                
+                if (!progress[id - 1]) {
+                    progress[id - 1] = true;
+                    localStorage.setItem('reactProgress', JSON.stringify(progress));
+                    updateProgress();
+                    showNotification(`✅ ${lesson.name} o'rganildi!`);
+                }
+            }
+        }
+
+        function updateProgress() {
+            const completed = progress.filter(Boolean).length;
+            document.getElementById('progressDisplay').textContent = `${completed}/50`;
+            document.getElementById('progressFill').style.width = `${(completed / 50) * 100}%`;
+        }
+
+        function changeTab(tab, button) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            
+            button.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+        }
+
+        function runCode() {
+            const demo = demoDatabase[currentLesson] || 'Demo...';
+            document.getElementById('demoPreview').innerHTML = demo;
+            showNotification('▶️ Component Preview render qilindi!');
+        }
+
+        function resetCode() {
+            loadLesson(currentLesson);
+            showNotification('🔄 Kod tiklandi');
+        }
+
+        function copyCode() {
+            const codeArea = document.getElementById('codeArea');
+            codeArea.select();
+            document.execCommand('copy');
+            showNotification('📋 React kodi nusxalandi!');
+        }
+
+        function downloadCode() {
+            const code = document.getElementById('codeArea').value;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `react_lesson_${currentLesson}.jsx`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('💾 React fayli yuklab olindi!');
+        }
+
+        function loadQuiz(id) {
+            const quiz = quizDatabase[id] || {
+                question: `${id}-dars bo'yicha savol?`,
+                options: ["A variant", "B variant", "C variant", "D variant"],
+                correct: 0
+            };
+            
+            document.getElementById('quizQuestion').textContent = quiz.question;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            quiz.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-option';
+                div.onclick = () => checkQuizAnswer(index, quiz.correct);
+                div.textContent = option;
+                optionsContainer.appendChild(div);
+            });
+            
+            document.getElementById('quizResult').style.display = 'none';
+        }
+
+        function checkQuizAnswer(selected, correct) {
+            document.querySelectorAll('.quiz-option').forEach((option, index) => {
+                option.classList.remove('correct', 'wrong');
+                if (index === correct) {
+                    option.classList.add('correct');
+                } else if (index === selected && index !== correct) {
+                    option.classList.add('wrong');
+                }
+            });
+            
+            const result = document.getElementById('quizResult');
+            if (selected === correct) {
+                result.textContent = '🎉 To\'g\'ri javob! ✅';
+                result.style.color = '#4cff00';
+            } else {
+                result.textContent = '❌ Noto\'g\'ri. Qaytadan urinib ko\'ring!';
+                result.style.color = '#ff0000';
+            }
+            result.style.display = 'block';
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function getCertificate() {
+            const completed = progress.filter(Boolean).length;
+            if (completed === 50) {
+                document.getElementById('certificateModal').style.display = 'block';
+            } else {
+                showNotification(`📚 ${completed}/50 dars tugatilgan. ${50 - completed} ta dars qoldi!`);
+            }
+        }
+
+        function closeCertificate() {
+            document.getElementById('certificateModal').style.display = 'none';
+            const certificateText = `
+╔════════════════════════════════════════════════════════════════╗
+║               🎉 REACT PROFESSIONAL SERTIFIKATI 🎉             ║
+╚════════════════════════════════════════════════════════════════╝
+
+Ushbu sertifikat berilmoqdaki:
+
+📜 SERTIFIKAT RAQAMI: RM-${Math.random().toString(36).substring(7).toUpperCase()}
+
+React.js'ni to'liq o'rganganlik uchun
+
+👨‍💻 O'QUVCHI: ${localStorage.getItem('userName') || 'React Master'}
+
+📅 SANA: ${new Date().toLocaleDateString('uz-UZ')}
+
+🏆 DARAJASI: React Professional Developer
+
+✅ TUGATILGAN DARSLAR: 50/50
+
+📚 MAVZULAR:
+   • React Asoslari (20 dars)
+   • O'rta Darajali Mavzular (15 dars)
+   • Yuqori Darajali Mavzular (15 dars)
+
+🎯 QOBILIYATLARI:
+   ✓ React Fundamentals
+   ✓ JSX Syntax
+   ✓ Functional & Class Components
+   ✓ Props va State Management
+   ✓ Hooks (useState, useEffect, useContext, etc)
+   ✓ Event Handling va Forms
+   ✓ Conditional Rendering va Lists
+   ✓ CSS Styling in React
+   ✓ Component Lifecycle
+   ✓ Context API
+   ✓ Custom Hooks
+   ✓ Higher Order Components
+   ✓ API Integration
+   ✓ Error Handling va Loading States
+   ✓ Redux State Management
+   ✓ React Router
+   ✓ Performance Optimization
+   ✓ React with TypeScript
+   ✓ Testing (Jest & React Testing Library)
+   ✓ Deployment & Production Best Practices
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Bu sertifikat REACT MASTER ACADEMY tomonidan berilgan
+va React Professional sifatida sertifikatsiya qilingan.
+
+═══════════════════════════════════════════════════════════════════
+
+REACT MASTER ACADEMY
+"0 dan PRO darajagacha o'rganish"
+
+═══════════════════════════════════════════════════════════════════
+            `;
+            
+            const blob = new Blob([certificateText], { type: 'text/plain; charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `React_Master_Sertifikati_${new Date().getTime()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('🏆 Sertifikat yuklab olindi!');
+        }
+
+        document.getElementById('certificateModal').onclick = function(e) {
+            if (e.target === this) {
+                closeCertificate();
+            }
+        };
+
+        // Initialize app
+        init();
+    </script>
+</body>
+</html>
